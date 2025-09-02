@@ -1,0 +1,38 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+
+import { agroAPI, pathsAgro } from '@/api/agroAPI';
+import { useAuthContext } from '@/auth/hooks';
+import { PromiseReturnRecord } from '@/auth/interfaces/PromiseReturnRecord';
+import { UseMutationReturn } from '@/modules/core/interfaces/responses/UseMutationReturn';
+import { Supply } from '@/modules/supplies/interfaces/Supply';
+import { useNavigate } from 'react-router-dom';
+import { MODULE_SUPPLIES_PATHS } from '../../routes/pathRoutes';
+
+export const createSupply = async (
+  supply: Supply
+): PromiseReturnRecord<Supply> =>
+  await agroAPI.post(`${pathsAgro.supplies}/create`, supply);
+
+export const usePostSupply = (): UseMutationReturn<Supply, Supply> => {
+  const queryClient = useQueryClient();
+  const { handleError } = useAuthContext();
+  const navigate = useNavigate();
+  const mutation: UseMutationReturn<Supply, Supply> = useMutation({
+    mutationFn: createSupply,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['supplies'] });
+      navigate(MODULE_SUPPLIES_PATHS.ViewAll);
+      toast.success(`Insumo creado`);
+    },
+    onError: (error) => {
+      handleError({
+        error,
+        messagesStatusError: {},
+      });
+    },
+    retry: false,
+  });
+
+  return mutation;
+};

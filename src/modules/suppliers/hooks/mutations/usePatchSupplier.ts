@@ -1,0 +1,45 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+import { agroAPI, pathsAgro } from "@/api/agroAPI";
+import { useAuthContext } from "@/auth/hooks";
+import { PromiseReturnRecord } from "@/auth/interfaces/PromiseReturnRecord";
+import { UseMutationReturn } from "@/modules/core/interfaces/responses/UseMutationReturn";
+import { Supplier } from "@/modules/suppliers/interfaces/Supplier";
+import { useNavigate } from "react-router-dom";
+import { MODULE_SUPPLIER_PATHS } from "../../routes/pathRoutes";
+
+export const updateSupplier = async (
+  supplier: Supplier
+): PromiseReturnRecord<void> => {
+  const { id, ...rest } = supplier;
+  return await agroAPI.patch(
+    `${pathsAgro.suppliers}/update/one/${id}`,
+    rest
+  );
+};
+
+export const usePatchSupplier = (): UseMutationReturn<void, Supplier> => {
+  const queryClient = useQueryClient();
+
+  const { handleError } = useAuthContext();
+
+  const navigate = useNavigate();
+  const mutation: UseMutationReturn<void, Supplier> = useMutation({
+    mutationFn: updateSupplier,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["suppliers"] });
+      await queryClient.invalidateQueries({ queryKey: ["supplier"] });
+      navigate(MODULE_SUPPLIER_PATHS.ViewAll);
+      toast.success(`Proveedor actualizado`);
+    },
+    onError: (error) => {
+      handleError({
+        error,
+        messagesStatusError: {},
+      });
+    },
+    retry: false,
+  });
+  return mutation;
+};

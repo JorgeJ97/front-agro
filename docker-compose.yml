@@ -1,0 +1,19 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: agro-front:latest
+    container_name: agro-front
+    ports:
+      - '${PORT:-8081}:80'
+    environment:
+      - VITE_HOST_API_AGRO=${VITE_HOST_API_AGRO}
+      - VITE_STATUS_PROJECT=${VITE_STATUS_PROJECT}
+    restart: unless-stopped
+    networks:
+      - agro-network
+
+networks:
+  agro-network:
+    name: agro-network
