@@ -2,6 +2,11 @@
 
 Agro es una aplicación web moderna diseñada para la gestión integral de operaciones agrícolas. Proporciona herramientas para el seguimiento de cultivos, gestión de personal, control de inventario, y análisis de datos en tiempo real.
 
+Puedes ver la aplicacion ingresando aqui: https://front-agro.onrender.com/
+Credenciales de prueba: 
+  - Email: demouser@example.com
+  - Password: 123456
+
 ## 🚀 Características Principales
 
 - **Gestión de Cultivos**: Seguimiento y monitoreo de cultivos en tiempo real
