@@ -47,7 +47,7 @@ export const Login: React.FC = () => {
     <div className="flex flex-col h-screen gap-10 space-y-6">
       <div className="px-4 py-4 border-b">
         <Link to="/" className="text-2xl font-bold text-black-600">
-          CropCo
+          Agro
         </Link>
       </div>
       <div className="flex items-center justify-center">
